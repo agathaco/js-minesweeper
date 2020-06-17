@@ -4,27 +4,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const result = document.querySelector('#result')
   const newGameBtn = document.querySelector('.btn')
 
-  let width = 10;
+  let width = 10
   let bombAmount = 20
   let flags = 0
   let tiles = [];
   let isGameOver = false
   let numberColors = ['#3498db', '#2ecc71', '#e74c3c', '#9b59b6', '#f1c40f', '#1abc9c', '#34495e', '#7f8c8d'];
 
+  function clearBoard() {
+    console.log('clearing');
+    isGameOver = false;
+    flags = 0;
+    tiles.forEach(tile => {
+      console.log('removing tiles')
+      tile.remove();
+    });
+    createBoard();
+  }
+  newGameBtn.addEventListener('click', () => clearBoard())
+
+
   function createBoard() {
     flagsLeft.innerHTML = bombAmount
 
-    //get shuffled game array with random bombs
-    const bombsArray = Array(bombAmount).fill(1)
-    const emptyArray = Array(width * width - bombAmount).fill(0)
-    const gameArray = emptyArray.concat(bombsArray).sort(() => Math.random() - 0.5)
-
-    // loops through all tiles
+    //add tiles
     for (let i = 0; i < width * width; i++) {
       const tile = document.createElement('div');
       tile.setAttribute('id', i);
-      const tileClass = gameArray[i] === 1 ? 'bomb' : 'valid'
-      tile.classList.add(tileClass)
+      tile.classList.add('tile')
       grid.appendChild(tile)
       tiles.push(tile)
 
@@ -36,8 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault()
         addFlag(tile)
       }
-
     }
+
+    //add bombs
+    const randomTiles = tiles.sort(() => Math.random() - 0.5).slice(0,bombAmount).map(tile => tile.id) // suffle tile's id and select 20 firsts to get 20 random tiles
+    tiles.forEach((tile) => randomTiles.includes(tile.id) ? tile.classList.add('has-bomb') : tile.classList.add('is-empty')) // if tile's id is in ramdomTile array, add bomb
+    tiles.sort((a, b) => a.id - b.id); //sort array by id again
+
 
     //add numbers
     for (let i = 0; i < tiles.length; i++) {
@@ -45,27 +57,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const isLeftEdge = (i % width === 0)
       const isRightEdge = (i % width === width - 1)
 
-      if (tiles[i].classList.contains('valid')) { // looping through all 'valid tiles
-        // checkedPositions.forEach(position => {
-        //   const tileChecked = tiles[i + position]
-        //   if (tileChecked && tileChecked.classList.contains('bomb')) total ++
-        //   tiles[i].setAttribute('data', total)
-        // })
-
+      if (!tiles[i].classList.contains('has-bomb')) {
+        console.log(tiles[i])
         if (!isLeftEdge) {
-          if (tiles[i - 1] && tiles[i - 1].classList.contains('bomb')) total++
-          if (tiles[i - 1 + width] && tiles[i - 1 + width].classList.contains('bomb')) total++
-          if (tiles[i - 1 - width] && tiles[i - 1 - width].classList.contains('bomb')) total++
+          if (tiles[i - 1] && tiles[i - 1].classList.contains('has-bomb')) total++
+          if (tiles[i - 1 + width] && tiles[i - 1 + width].classList.contains('has-bomb')) total++
+          if (tiles[i - 1 - width] && tiles[i - 1 - width].classList.contains('has-bomb')) total++
         }
 
         if (!isRightEdge) {
-          if (tiles[i + 1] && tiles[i + 1].classList.contains('bomb')) total++
-          if (tiles[i + 1 + width] && tiles[i + 1 + width].classList.contains('bomb')) total++
-          if (tiles[i + 1 - width] && tiles[i + 1 - width].classList.contains('bomb')) total++
+          if (tiles[i + 1] && tiles[i + 1].classList.contains('has-bomb')) total++
+          if (tiles[i + 1 + width] && tiles[i + 1 + width].classList.contains('has-bomb')) total++
+          if (tiles[i + 1 - width] && tiles[i + 1 - width].classList.contains('has-bomb')) total++
         }
 
-        if (tiles[i - width] && tiles[i - width].classList.contains('bomb')) total++
-        if (tiles[i + width] && tiles[i + width].classList.contains('bomb')) total++
+        if (tiles[i - width] && tiles[i - width].classList.contains('has-bomb')) total++
+        if (tiles[i + width] && tiles[i + width].classList.contains('has-bomb')) total++
 
         tiles[i].setAttribute('data', total)
 
@@ -81,7 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentId = tile.id
     if (isGameOver) return
     if (tile.classList.contains('checked') || tile.classList.contains('flag')) return
-    if (tile.classList.contains('bomb')) {
+    if (tile.classList.contains('has-bomb')) {
+      console.log(tile)
       gameOver()
     } else {
       let total = tile.getAttribute('data')
@@ -104,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loopThroughtiles(tileId) {
       const newId = tileId.id
-      const newtile = document.getElementById(newId)
-      clickTile(newtile)
+      const newTile = document.getElementById(newId)
+      clickTile(newTile)
     }
 
     setTimeout(() => {
@@ -131,9 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //show all the bombs
     tiles.forEach(tile => {
-      if (tile.classList.contains('bomb')) {
+      if (tile.classList.contains('has-bomb')) {
         tile.innerHTML = '💣'
-        tile.classList.remove('bomb')
+        tile.classList.remove('has-bomb')
         tile.classList.add('checked')
       }
     })
@@ -162,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function checkForWin() {
     let matches = 0
     tiles.forEach(tile => {
-      if (tile.classList.contains('flag') && tile.classList.contains('bomb')) {
+      if (tile.classList.contains('flag') && tile.classList.contains('has-bomb')) {
         matches++
       }
       if (matches === bombAmount) {
