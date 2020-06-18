@@ -4,19 +4,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const result = document.querySelector('#result')
   const newGameBtn = document.querySelector('.btn')
 
-  let width = 10
-  let bombAmount = 20
+  const levels = [
+    {
+      name:'Easy',
+      width: 10,
+      bombs: 20
+    },
+    {
+      name:'Medium',
+      width: 15,
+      bombs: 30
+    },
+    {
+      name:'Hard',
+      width: 20,
+      bombs: 70
+    },
+  ]
+  let root = document.documentElement;
+  let selectedLevel = levels[0];
   let flags = 0
   let tiles = [];
   let isGameOver = false
   let numberColors = ['#3498db', '#2ecc71', '#e74c3c', '#9b59b6', '#f1c40f', '#1abc9c', '#34495e', '#7f8c8d'];
 
   function clearBoard() {
-    console.log('clearing');
     isGameOver = false;
     flags = 0;
     tiles.forEach(tile => {
-      console.log('removing tiles')
       tile.remove();
     });
     createBoard();
@@ -25,7 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   function createBoard() {
-    flagsLeft.innerHTML = bombAmount
+    flagsLeft.innerHTML = selectedLevel.bombs
+    const width = selectedLevel.width
+    const tileWidth = parseInt((getComputedStyle(root).getPropertyValue('--tile-width')))
+    root.style.setProperty('--grid-width', width * tileWidth)
 
     //add tiles
     for (let i = 0; i < width * width; i++) {
@@ -46,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //add bombs
-    const randomTiles = tiles.sort(() => Math.random() - 0.5).slice(0,bombAmount).map(tile => tile.id) // suffle tile's id and select 20 firsts to get 20 random tiles
+    const randomTiles = tiles.sort(() => Math.random() - 0.5).slice(0, selectedLevel.bombs).map(tile => tile.id) // suffle tile's id and select 20 firsts to get 20 random tiles
     tiles.forEach((tile) => randomTiles.includes(tile.id) ? tile.classList.add('has-bomb') : tile.classList.add('is-empty')) // if tile's id is in ramdomTile array, add bomb
     tiles.sort((a, b) => a.id - b.id); //sort array by id again
 
@@ -58,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const isRightEdge = (i % width === width - 1)
 
       if (!tiles[i].classList.contains('has-bomb')) {
-        console.log(tiles[i])
         if (!isLeftEdge) {
           if (tiles[i - 1] && tiles[i - 1].classList.contains('has-bomb')) total++
           if (tiles[i - 1 + width] && tiles[i - 1 + width].classList.contains('has-bomb')) total++
@@ -89,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isGameOver) return
     if (tile.classList.contains('checked') || tile.classList.contains('flag')) return
     if (tile.classList.contains('has-bomb')) {
-      console.log(tile)
       gameOver()
     } else {
       let total = tile.getAttribute('data')
@@ -106,10 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //check neighboring tiles once tile is clicked
   function checktile(currentId) {
+    const width = selectedLevel.width
     const isLeftEdge = (currentId % width === 0)
     const isRightEdge = (currentId % width === width - 1)
     const parsedId = parseInt(currentId);
-
     function loopThroughtiles(tileId) {
       const newId = tileId.id
       const newTile = document.getElementById(newId)
@@ -150,18 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
   //add Flag with right click
   function addFlag(tile) {
     if (isGameOver) return
-    if (!tile.classList.contains('checked') && (flags < bombAmount)) {
+    if (!tile.classList.contains('checked') && (flags < selectedLevel.bombs)) {
       if (!tile.classList.contains('flag')) {
         tile.classList.add('flag')
         tile.innerHTML = ' 🚩'
         flags++
-        flagsLeft.innerHTML = bombAmount - flags
+        flagsLeft.innerHTML = selectedLevel.bombs - flags
         checkForWin()
       } else {
         tile.classList.remove('flag')
         tile.innerHTML = ''
         flags--
-        flagsLeft.innerHTML = bombAmount - flags
+        flagsLeft.innerHTML = selectedLevel.bombs - flags
       }
     }
   }
@@ -173,17 +189,38 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tile.classList.contains('flag') && tile.classList.contains('has-bomb')) {
         matches++
       }
-      if (matches === bombAmount) {
+      if (matches === selectedLevel.bombs) {
         result.innerHTML = 'YOU WIN!'
         isGameOver = true
 
         // reveal all remaining tiles
         if (!tile.classList.contains('checked')) {
-          console.log('revealing tile')
           tile.classList.add('checked')
         }
       }
     })
   }
+
+  // dropdown menu functions
+  const dropdownTitle = document.querySelector('.dropdown .title');
+  const dropdownOptions = document.querySelectorAll('.dropdown .option');
+
+  function toggleMenuDisplay(e) {
+    const dropdown = e.target.parentNode; //getting the parent selector
+    const menu = dropdown.querySelector('.menu'); //selecting 'menu' fron the parent selector
+    menu.classList.toggle('close-menu');
+  }
+
+  function handleOptionSelected(e) {
+    e.target.parentNode.classList.toggle('close-menu'); // using parentnode to get the menu  elementfrom option elements
+    dropdownTitle.textContent = e.target.textContent;
+    // here: select current level form levels object
+    selectedLevel = levels.find(level => level.name === e.target.textContent)
+    clearBoard();
+  }
+
+  //bind listeners to these elements
+  dropdownTitle.addEventListener('click', toggleMenuDisplay);
+  dropdownOptions.forEach(option => option.addEventListener('click', handleOptionSelected));
 
 })
