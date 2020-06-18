@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const flagsLeft = document.querySelector('#flags-left')
   const result = document.querySelector('#result')
   const newGameBtn = document.querySelector('.btn')
-
   const levels = [
     {
       name:'Easy',
@@ -29,11 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
   let numberColors = ['#3498db', '#2ecc71', '#e74c3c', '#9b59b6', '#f1c40f', '#1abc9c', '#34495e', '#7f8c8d'];
 
   function clearBoard() {
+    console.clear();
     isGameOver = false;
     flags = 0;
     tiles.forEach(tile => {
       tile.remove();
     });
+    tiles = [];
+    result.innerHTML = ''
     createBoard();
   }
   newGameBtn.addEventListener('click', () => clearBoard())
@@ -126,12 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const isLeftEdge = (currentId % width === 0)
     const isRightEdge = (currentId % width === width - 1)
     const parsedId = parseInt(currentId);
+
     function loopThroughtiles(tileId) {
       const newId = tileId.id
       const newTile = document.getElementById(newId)
       clickTile(newTile)
     }
-
     setTimeout(() => {
       if (!isRightEdge) {
         if (tiles[parsedId + 1 - width]) loopThroughtiles(tiles[parsedId + 1 - width])
@@ -208,11 +210,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function toggleMenuDisplay(e) {
     const dropdown = e.target.parentNode; //getting the parent selector
     const menu = dropdown.querySelector('.menu'); //selecting 'menu' fron the parent selector
-    menu.classList.toggle('close-menu');
+    menu.classList.toggle('show');
   }
 
   function handleOptionSelected(e) {
-    e.target.parentNode.classList.toggle('close-menu'); // using parentnode to get the menu  elementfrom option elements
+    e.target.parentNode.classList.toggle('show'); // using parentnode to get the menu  elementfrom option elements
     dropdownTitle.textContent = e.target.textContent;
     // here: select current level form levels object
     selectedLevel = levels.find(level => level.name === e.target.textContent)
