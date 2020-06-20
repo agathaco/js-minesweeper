@@ -1,16 +1,27 @@
-$grey: #1D2733;
-$bg: #ffebc5;
-$red: crimson;
+// $grey: #1D2733;
+// $tile: #f3f1ff;
+$header:  #c8befb;
+$x-dark: #39395b;
+$dark: #574c8c;
+$medium: #b0afd7;
+$light: #e9e5fc;
 
 :root {
   --grid-width: 350;
   --tile-width: 35;
 }
 
-html {
-  box-sizing: border-box;
-  background-color: $grey;
+body {
+  padding: 0;
+  margin: 0;
+  background-color: $dark;
+  width: 100%;
+  height:100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 *,
 *:before,
 *:after {
@@ -20,15 +31,19 @@ html {
 .container {
   width: calc(var(--grid-width) * 1px);
   align-content: center;
-  margin: 50px;
+  font-family: 'Roboto Mono', monospace;
+  text-align: center;
 }
 
 .header {
   display: flex;
-  height:80px;
   position: relative;
-  height: 100%;
   align-items: flex-start;
+  background-color: $header;
+  color: white;
+  justify-content: space-between;
+  padding:1rem;
+
 }
 
 .grid {
@@ -41,63 +56,75 @@ html {
 .tile {
   height: calc(var(--tile-width) * 1px);
   width: calc(var(--tile-width)  * 1px);
-  border: 1px solid black;
   cursor: pointer;
-  border: 3px solid;
-  border-color: #f5f3eb #bab7a9 #bab7a9 #fff9db;
+  border: 2px solid;
+  border-color: lighten($light, 5%) darken($light, 5%) darken($light, 5%) lighten($light, 5%);
   box-sizing: border-box;
-  background-color: #C7CED9;
-
-}
-
-div {
+  background-color: $light;
+  font-weight: 700;
   font-size: 25px;
-  text-align: center;
-  font-family: 'Roboto Mono', monospace;
+  text-shadow:  1px 1px white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.tile svg{
+  width: 80%;
+}
 
 .checked {
-  border: 2px solid;
-  background-color: rgb(172, 179, 189);
-  border-color: #9c998d;
+  border: 1px solid;
+  background-color: darken($light, 1%);
+  border-color: darken($light, 10%);
 }
 
 #result {
   margin-top: 5px;
-  color: #e76346;
+  color: #f38f44;
 }
 
-.btn {
-  padding: 0.5rem;
-  display: inline-block;
+#refresh {
   cursor:pointer;
-  background-color: rgb(172, 179, 189);
+  width:30px;
+  align-self: flex-end;
 }
 
 .dropdown {
-	border: 0.1em solid black;
-	min-width: 5em;
   color: white;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 3px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1rem;
+  text-align: center;
+
   .title {
     width: 100%;
-    padding:0.5rem;
+    padding:0.5rem 1rem;
     cursor: pointer;
   }
+
   .menu {
+    background:$header;
     position:absolute;
     overflow: hidden;
     cursor: pointer;
     display: none;
+    width: 5rem;
+    text-align: left;
+    line-height:1.4rem;
     &.show {
       display:block;
     }
     .option{
-      margin: .3em;
-      margin-top: 0.3em;
+      padding: .5rem;
       &:hover {
         background: rgba(0,0,0,0.2);
       }
     }
   }
+}
+
+.flag-countdown {
+  display: flex;
 }

@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid')
   const flagsLeft = document.querySelector('#flags-left')
   const result = document.querySelector('#result')
-  const newGameBtn = document.querySelector('.btn')
+  const newGameBtn = document.querySelector('#refresh')
   const levels = [
     {
       name:'Easy',
@@ -20,12 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
       bombs: 70
     },
   ]
+  const flagIcon = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Flag" fill="#574c8c" x="0px" y="0px" viewBox="0 0 403.04 403.04" style="enable-background:new 0 0 403.04 403.04;" xml:space="preserve"><g><path d="M370.604,50.16L370.604,50.16c-2.948-1.487-6.507-1.011-8.96,1.2c-21.68,19.44-41.6,28.88-60.96,28.88s-38.16-8.96-61.52-29.2c-50.72-43.28-100.56-43.2-158.8-1.84c-4.08,2.88-4.08,2.88-3.36,86.16c0,32.72,0.56,73.28,0,78.96c-1.106,4.278,1.465,8.642,5.742,9.748c2.572,0.665,5.306,0.01,7.298-1.748c20.301-15.662,45.085-24.409,70.72-24.96c16.693,0.091,33.132,4.092,48,11.68c16.247,8.709,34.294,13.529,52.72,14.08c96.64,0,112.56-158.16,113.2-164.88C375.125,54.962,373.504,51.751,370.604,50.16z"/></g><g><path d="M52.364,0h-7.52c-9.146,0-16.56,7.414-16.56,16.56v369.92c0,9.146,7.414,16.56,16.56,16.56h7.52c9.146,0,16.56-7.414,16.56-16.56V16.56C68.924,7.414,61.51,0,52.364,0z"/></g></svg>'
   let root = document.documentElement;
   let selectedLevel = levels[0];
   let flags = 0
   let tiles = [];
   let isGameOver = false
-  let numberColors = ['#3498db', '#2ecc71', '#e74c3c', '#9b59b6', '#f1c40f', '#1abc9c', '#34495e', '#7f8c8d'];
+  let numberColors = ['#2baef6', '#42dfbc', '#e989ec', '#625edc', '#f8d31e', '#b54874', '#21709b', '#34495e'];
+
 
   function clearBoard() {
     console.clear();
@@ -52,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const tile = document.createElement('div');
       tile.setAttribute('id', i);
       tile.classList.add('tile')
+      console.log(tile)
       grid.appendChild(tile)
       tiles.push(tile)
 
@@ -113,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let total = tile.getAttribute('data')
       if (total != 0) {
         tile.classList.add('checked')
-        tile.style.color = numberColors[total - 1];
+        tile.style.color= numberColors[total - 1];
         tile.innerHTML = total
         return
       }
@@ -171,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!tile.classList.contains('checked') && (flags < selectedLevel.bombs)) {
       if (!tile.classList.contains('flag')) {
         tile.classList.add('flag')
-        tile.innerHTML = ' 🚩'
+        tile.innerHTML = flagIcon
         flags++
         flagsLeft.innerHTML = selectedLevel.bombs - flags
         checkForWin()
