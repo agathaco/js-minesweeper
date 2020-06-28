@@ -1,9 +1,7 @@
 // $header:  #c8befb;
-$x-dark: #39395b;
-$dark: #574c8c;
 $main: var(--main-color);
-$light: #f3f1ff;
-
+$dark: var(--dark-color);
+$tile: #f3f1ff;
 
 $colors: #8B6AF5, #23a2e8, #42dfbc, #f9dd5b, #FEAC5E, #ff5d9e, #F29FF5, #c154d8;
 
@@ -16,12 +14,13 @@ $colors: #8B6AF5, #23a2e8, #42dfbc, #f9dd5b, #FEAC5E, #ff5d9e, #F29FF5, #c154d8;
 body {
   padding: 0;
   margin: 0;
-  background-color: #f9f8fe;
+  background: #f9f8fe;
   width: 100%;
   height:100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   font-family: 'Roboto Mono', monospace;
 }
 
@@ -44,7 +43,7 @@ body {
   display: flex;
   position: relative;
   align-items: flex-start;
-  background-color: var(--main-color);
+  background-color: $main;
   color: white;
   justify-content: space-between;
   padding:1rem;
@@ -63,9 +62,9 @@ body {
   width: calc(var(--tile-width)  * 1px);
   cursor: pointer;
   border: 2px solid;
-  border-color: lighten($light, 5%) darken($light, 5%) darken($light, 5%) lighten($light, 5%);
+  border-color: lighten($tile, 5%) darken($tile, 5%) darken($tile, 5%) lighten($tile, 5%);
   box-sizing: border-box;
-  background-color: $light;
+  background-color: $tile;
   font-weight: 700;
   font-size: 25px;
   display: flex;
@@ -79,8 +78,8 @@ body {
 
 .checked {
   border: 1px solid;
-  background-color: darken($light, 2%);
-  border-color: darken($light, 5%);
+  background-color: darken($tile, 2%);
+  border-color: darken($tile, 5%);
 }
 
 #refresh {
@@ -174,6 +173,11 @@ body {
   padding:1rem;
 }
 
+#result-message {
+  color: $dark;
+  font-size:40px;
+}
+
 #new-game {
   padding:0.5rem;
   background-color: $main;
@@ -184,6 +188,7 @@ body {
   align-items: center;
   height:60px;
   border-radius: 0 0 4px 4px;
+  font-family: sans-serif;
   * {
     display: inline-block;
   }
@@ -193,31 +198,22 @@ body {
   }
 }
 
-#bubbles {
+#background {
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
   z-index: 1;
-  position: absolute;;
+  position: absolute;
   z-index: 1;
-	.bubble {
+  width: 100%;
+  height: 100%;
+  svg {
+    width: 50px;
+    height: 40px;
+    opacity: 0.2;
     position: absolute;
-    filter: blur(0.5rem);
-		border-radius: 50%;
-	}
-	@for $i from 1 through (60) {
-		$top: random(100)+vh;
-    $left: random(100)+vw;
-    $size: random(100) + 60px;
-		.bubble:nth-of-type(#{$i}) {
-			width: $size;
-			height: $size;
-			top: $top;
-      left: $left;
-      background-color: lighten(nth($colors, random(length($colors))), 30%);
-		}
-	}
+  }
 }
 
 svg#bomb{
@@ -228,6 +224,19 @@ svg#bomb{
       display: block;
     }
   }
+  .bomb-fill {
+    fill: $main;
+  }
+  .bomb-stroke {
+    stroke: $dark;
+  }
+  .bomb-fill-dark {
+    fill: $dark;
+  }
+}
+
+svg.hide {
+  display: none;
 }
 
 .shake {
