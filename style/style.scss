@@ -1,9 +1,8 @@
-// $header:  #c8befb;
 $main: var(--main-color);
 $dark: var(--dark-color);
 $tile: #f3f1ff;
 
-$colors: #8B6AF5, #23a2e8, #42dfbc, #f9dd5b, #FEAC5E, #ff5d9e, #F29FF5, #c154d8;
+// $colors: #8B6AF5, #6ca2e5, #42dfbc, #f9dd5b, #FEAC5E, #ff5d9e, #F29FF5, #c154d8;
 
 :root {
   --grid-width: 350;
@@ -127,7 +126,7 @@ body {
   transition: background .25s ease-in;
 }
 
-.flag-countdown {
+#flag-countdown, #timer {
   display: flex;
   font-size:35px;
   span {
@@ -170,7 +169,7 @@ body {
 }
 
 #result-top {
-  padding:1rem;
+  margin:2rem;
 }
 
 #result-message {
@@ -186,8 +185,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin:1rem;
   height:60px;
-  border-radius: 0 0 4px 4px;
+  border-radius: 4px;
   font-family: sans-serif;
   * {
     display: inline-block;

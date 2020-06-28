@@ -3,11 +3,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.querySelector(".container");
   const flagsLeft = document.querySelector("#flags-left");
   const result = document.querySelector("#result-message");
-  const newGameBtn = document.querySelector("#refresh");
   const modal = document.querySelector("#modal");
   const background = document.querySelector("#background");
   const bombSadFace = document.querySelector("#sad-face");
   const bombHappyFace = document.querySelector("#happy-face");
+  let timer = document.querySelector(".counter");
 
   const levels = [
     {
@@ -34,11 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let flags = 0;
   let tiles = [];
   let isGameOver = false;
- 
+  let isTimerOn = false;
+  let timerCount = 0;
 
   let numberColors = [
     "#8B6AF5",
-    "#23a2e8",
+    "#6ca2e5",
     "#42dfbc",
     "#f9dd5b",
     "#FEAC5E",
@@ -51,13 +52,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function getMainColor() {
     const randomColor = numberColors[Math.floor(Math.random()*numberColors.length)]
     root.style.setProperty('--main-color', randomColor);
-    root.style.setProperty('--dark-color', lightenDarkenColor(randomColor, -40));
+    root.style.setProperty('--dark-color', lightenDarkenColor(randomColor, -50));
   }
 
 
   function clearBoard() {
     isGameOver = false;
     flags = 0;
+    timerCount = 0;
+    isTimerOn = false;
+    timer.innerHTML = "000"
     tiles.forEach((tile) => {
       tile.remove();
     });
@@ -67,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
     bombSadFace.classList.remove("show")
     createBoard();
   }
-  newGameBtn.addEventListener("click", () => clearBoard());
 
   function setUp() {
     createBackground()
@@ -163,6 +166,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //click on tile
   function clickTile(tile) {
+    if (!isTimerOn) {
+      isTimerOn = true;
+      startTimer();
+    }
     let currentId = tile.id;
     if (isGameOver) return;
     if (tile.classList.contains("checked") || tile.classList.contains("flag"))
@@ -218,6 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //game over
   function gameOver(currentTile) {
     isGameOver = true;
+    stopTimer();
     currentTile.innerHTML = bombIcon;
     container.classList.add('shake')
     currentTile.style.backgroundColor = bgColors[Math.floor(Math.random() * bgColors.length)];
@@ -275,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
         matches++;
       }
       if (matches === selectedLevel.bombs) {
+        stopTimer();
         modal.classList.add("show");
         bombHappyFace.classList.add("show")
         result.innerHTML = "CONGRATULATIONS!";
@@ -346,6 +355,24 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
+
+  // timer functions
+
+
+  function startTimer(){
+    let sec = 0;
+    timerCount = setInterval(() => {
+      sec++;
+      console.log(sec)
+      timer.innerHTML=('00'+sec).slice(-3);
+      if (sec > 998) clearInterval(timerCount)
+    }, 1000);
+}
+
+  function stopTimer() {
+    clearInterval(timerCount);
+    isTimerOn = false;
+  };
 
   //helper function
   function lightenDarkenColor(col, amt) {

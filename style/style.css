@@ -100,10 +100,10 @@ body {
 .has-bomb {
   transition: background .25s ease-in; }
 
-.flag-countdown {
+#flag-countdown, #timer {
   display: flex;
   font-size: 35px; }
-  .flag-countdown span {
+  #flag-countdown span, #timer span {
     margin-left: 0.5rem; }
 
 #modal {
@@ -137,7 +137,7 @@ body {
   text-align: center; }
 
 #result-top {
-  padding: 1rem; }
+  margin: 2rem; }
 
 #result-message {
   color: var(--dark-color);
@@ -151,8 +151,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 1rem;
   height: 60px;
-  border-radius: 0 0 4px 4px;
+  border-radius: 4px;
   font-family: sans-serif; }
   #new-game * {
     display: inline-block; }
