@@ -2,8 +2,6 @@ $main: var(--main-color);
 $dark: var(--dark-color);
 $tile: #f3f1ff;
 
-// $colors: #8B6AF5, #6ca2e5, #42dfbc, #f9dd5b, #FEAC5E, #ff5d9e, #F29FF5, #c154d8;
-
 :root {
   --grid-width: 350;
   --tile-width: 35;
@@ -157,10 +155,12 @@ body {
   .modal-close {
     text-align: right;
   }
+  h2 {
+    color: $main;
+  }
 }
 
 #result-box {
-  color: #c154d8;
   background-color: #f9f8fe;
   box-shadow: 5px 5px 20px 0 rgba(100, 74, 74, 0.1);
   border-radius: 4px;
@@ -175,6 +175,14 @@ body {
 #result-message {
   color: $dark;
   font-size:40px;
+}
+
+.result-time {
+  display: none;
+}
+
+.show {
+  display: block;
 }
 
 #new-game {
@@ -195,6 +203,7 @@ body {
   h2 {
     line-height:30px;
     margin: 0 0 0 1rem;
+    color: white;
   }
 }
 
@@ -211,7 +220,7 @@ body {
   svg {
     width: 50px;
     height: 40px;
-    opacity: 0.2;
+    opacity: 0.3;
     position: absolute;
   }
 }
